@@ -62,7 +62,12 @@ public class VoteManager {
 
             votes.put(uuid, vote);
 
-            String voteMessage = vote ? ChatColor.GREEN + "votó para saltar la noche" : ChatColor.RED + "votó para continuar la noche";
+            String voteMessage;
+            if(votes.containsKey(uuid))
+                voteMessage = vote ? ChatColor.GREEN + "cambió su voto para saltar la noche" : ChatColor.RED + "cambió su voto para continuar la noche";
+            else
+                voteMessage = vote ? ChatColor.GREEN + "votó para saltar la noche" : ChatColor.RED + "votó para continuar la noche";
+
             Bukkit.broadcastMessage(ChatColor.YELLOW + Bukkit.getPlayer(uuid).getName() + " " + voteMessage);
 
             int onlinePlayersCount = Bukkit.getOnlinePlayers().size();
