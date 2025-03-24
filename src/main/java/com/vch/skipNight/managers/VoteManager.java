@@ -61,14 +61,14 @@ public class VoteManager {
                 Bukkit.getPlayer(uuid).sendMessage(ChatColor.RED + "Ya has votado para " + (vote ? "saltar la noche" : "continuar la noche"));
                 return;
             }
-            votes.put(uuid, vote);
 
             String voteMessage;
             if(votes.containsKey(uuid))
                 voteMessage = vote ? ChatColor.GREEN + "cambió su voto para saltar la noche" : ChatColor.RED + "cambió su voto para continuar la noche";
             else
                 voteMessage = vote ? ChatColor.GREEN + "votó para saltar la noche" : ChatColor.RED + "votó para continuar la noche";
-
+                
+            votes.put(uuid, vote);
             Bukkit.broadcastMessage(ChatColor.YELLOW + Bukkit.getPlayer(uuid).getName() + " " + voteMessage);
 
             int onlinePlayersCount = Bukkit.getOnlinePlayers().size();
