@@ -57,9 +57,10 @@ public class VoteManager {
 
         if(isVoteActive()) {
 
-            if(votes.containsKey(uuid) && votes.get(uuid) == vote)
-                return Bukkit.getPlayer(uuid).sendMessage(ChatColor.RED + "Ya has votado para " + (vote ? "saltar la noche" : "continuar la noche"));
-
+            if(votes.containsKey(uuid) && votes.get(uuid) == vote) {
+                Bukkit.getPlayer(uuid).sendMessage(ChatColor.RED + "Ya has votado para " + (vote ? "saltar la noche" : "continuar la noche"));
+                return;
+            }
             votes.put(uuid, vote);
 
             String voteMessage;
