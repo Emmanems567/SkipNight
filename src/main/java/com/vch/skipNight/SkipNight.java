@@ -14,23 +14,17 @@ public final class SkipNight extends JavaPlugin {
 
     @Override
     public void onEnable() {
-
         this.voteManager = new VoteManager(this);
-
         getCommand("vote").setExecutor(new VoteCommand(this.voteManager));
-
         this.timeCheckTask = Bukkit.getScheduler().runTaskTimer(this, new TimeCheckTask(this.voteManager), 0L, 20L);
-
     }
 
     @Override
     public void onDisable() {
 
         if (this.timeCheckTask != null) {
-
             this.timeCheckTask.cancel();
             this.timeCheckTask = null;
-
         }
 
     }

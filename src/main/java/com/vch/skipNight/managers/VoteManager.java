@@ -24,15 +24,13 @@ public class VoteManager {
 
     private BukkitTask voteTask;
 
-    public VoteManager(SkipNight plugin){
-
+    public VoteManager(SkipNight plugin) {
         this.plugin = plugin;
-
     }
 
     public void startVote() {
 
-        if (this.voteActive) return;
+        if(this.voteActive || Bukkit.getOnlinePlayers().size() == 0) return;
 
         votes.clear();
         voteActive = true;
@@ -48,9 +46,7 @@ public class VoteManager {
         noButton.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click para dejar la noche")));
 
         Bukkit.getOnlinePlayers().forEach(player -> {
-
             player.spigot().sendMessage(message, yesButton, noButton);
-
         });
 
         this.voteTask = Bukkit.getScheduler().runTaskLater(plugin, this::processVoteResults, 600L);
@@ -59,7 +55,10 @@ public class VoteManager {
 
     public void castVote(UUID uuid, boolean vote) {
 
-        if (isVoteActive()) {
+        if(isVoteActive()) {
+
+            if(votes.containsKey(uuid) && votes.get(uuid) == vote)
+                return Bukkit.getPlayer(uuid).sendMessage(ChatColor.RED + "Ya has votado para " + (vote ? "saltar la noche" : "continuar la noche"));
 
             votes.put(uuid, vote);
 
@@ -67,12 +66,9 @@ public class VoteManager {
             Bukkit.broadcastMessage(ChatColor.YELLOW + Bukkit.getPlayer(uuid).getName() + " " + voteMessage);
 
             int onlinePlayersCount = Bukkit.getOnlinePlayers().size();
-
-            if (votes.size() >= onlinePlayersCount) {
-
+            if(votes.size() >= onlinePlayersCount) {
                 this.voteTask.cancel();
                 processVoteResults();
-
             }
 
         }
@@ -80,30 +76,19 @@ public class VoteManager {
     }
 
     public boolean isVoteActive() {
-
         return this.voteActive;
-
     }
 
     private void processVoteResults() {
 
-        if (!this.voteActive) return;
+        if(!this.voteActive) return;
 
         int votesForDay = 0;
         int votesForNight = 0;
 
-        for (Boolean vote : votes.values()) {
-
-            if (vote) {
-
-                votesForDay++;
-
-            } else {
-
-                votesForNight++;
-
-            }
-
+        for(Boolean vote : votes.values()) {
+            if(vote) votesForDay++;
+            else votesForNight++;
         }
 
         boolean keepDay = votesForDay > votesForNight;
@@ -111,26 +96,19 @@ public class VoteManager {
 
         Bukkit.broadcastMessage(border);
 
-        if (keepDay) {
+        if(keepDay) {
 
             Bukkit.broadcastMessage(ChatColor.GREEN + "   Amanecerá en seguida");
 
-            for (World world : Bukkit.getWorlds()) {
-
+            for(World world : Bukkit.getWorlds())
                 world.setTime(1000);
 
-            }
-
-            for (Player player : Bukkit.getOnlinePlayers()) {
-
+            for(Player player : Bukkit.getOnlinePlayers())
                 player.setStatistic(Statistic.TIME_SINCE_REST, 0);
 
-            }
-
-        } else {
-
+        } 
+        else {
             Bukkit.broadcastMessage(ChatColor.RED + "   La noche continúa");
-
         }
 
         Bukkit.broadcastMessage(border);

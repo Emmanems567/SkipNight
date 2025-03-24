@@ -18,45 +18,30 @@ public class VoteCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
 
-        if (!(commandSender instanceof Player player)) {
-
+        if(!(commandSender instanceof Player player)) {
             commandSender.sendMessage(ChatColor.RED + "Solo jugadores pueden votar");
             return true;
-
         }
 
-        if (!voteManager.isVoteActive()) {
-
+        if(!voteManager.isVoteActive()) {
             player.sendMessage(ChatColor.RED + "No hay ningún voto activo");
             return true;
-
         }
 
-        if (strings.length < 1) {
-
+        if(strings.length < 1)
             player.sendMessage(ChatColor.RED + "Usar: /vote <yes|no>");
 
-        }
-
         String vote = strings[0].toLowerCase();
-
         switch (vote) {
-
             case "yes":
-
                 voteManager.castVote(player.getUniqueId(), true);
                 break;
-
             case "no":
-
                 voteManager.castVote(player.getUniqueId(), false);
                 break;
-
             default:
-
                 player.sendMessage(ChatColor.RED + "Usar: /vote <yes|no>");
                 break;
-
         }
 
         return true;
