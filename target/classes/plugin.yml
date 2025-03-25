@@ -1,5 +1,6 @@
+api: '1.21'
 name: SkipNight
-version: '1.5'
+version: '1.6'
 main: com.vch.skipNight.SkipNight
 api-version: '1.21'
 commands:
